@@ -30,7 +30,7 @@ def evaluate_model(model, dataloader, criterion, device):
             X = X.to(device)
             y = y.to(device)
 
-            pred = model(X)
+            pred = model(X).squeeze(-1)
             loss = criterion(pred, y)
             total_loss += loss.item()
 

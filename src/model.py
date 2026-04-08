@@ -7,8 +7,13 @@ class ForecastModel(nn.Module):
         
         super().__init__()
         self.net = nn.Sequential(
-            nn.Linear(in_features=in_features, out_features=out_features)
+            nn.Linear(in_features=in_features, out_features=32),
+            nn.ReLU(),
+            nn.Linear(in_features=32, out_features=16),
+            nn.ReLU(),
+            nn.Linear(in_features=16, out_features=out_features)
         )
     
     def forward(self, x):
         return self.net(x)
+    
