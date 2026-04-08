@@ -11,8 +11,8 @@ def load_dataset(dataset_dir='../data', window_size = 5) -> tuple[np.ndarray, np
     test_file = os.path.join(current_dir, dataset_dir, 'electricity_test.csv')
     train_dataframe = pd.read_csv(train_file)
     test_dataframe = pd.read_csv(test_file)
-    print("Dataframe sample data:")
-    print(train_dataframe.head())
+    #print("Dataframe sample data:")
+    #print(train_dataframe.head())
     print(f"Column names: {train_dataframe.columns}. Dataframe shape: {train_dataframe.shape}. Data types: {train_dataframe.dtypes}")
 
     # transofrms the timestamp column to datetime
