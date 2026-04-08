@@ -7,3 +7,15 @@ def get_device() -> torch.device:
     else:
         print("GPU not available, using CPU")
     return device
+
+def get_hidden_layer1_size():
+    return [64, 128]
+
+def get_hidden_layer2_size():
+    return [32, 64]
+
+def get_learning_rate():
+    return [1e-3, 3e-4]
+
+def get_batch_size():
+    return [256, 512]

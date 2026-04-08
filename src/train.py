@@ -1,8 +1,11 @@
+from typing import Callable
 import torch.nn as nn
 import torch.optim as optim
 import torch
 
-def train_model(model : nn.Module, train_loader, test_loader, criterion, optimizer, device, epochs):
+def train_model(model : nn.Module, train_loader, test_loader, criterion,
+                 eval_criteria : list[tuple[str, Callable[[torch.Tensor, torch.Tensor], torch.Tensor]]],
+                   optimizer, device, epochs):
     model.to(device)
     for epoch in range(epochs):
         model.train()
@@ -16,13 +19,12 @@ def train_model(model : nn.Module, train_loader, test_loader, criterion, optimiz
             loss.backward()
             optimizer.step()
             total_loss += loss.item()
-        
-        mae = evaluate_model(model, test_loader, mae_criterion, device)
-        rmse = evaluate_model(model, test_loader, rmse_criterion, device)
-        mape = evaluate_model(model, test_loader, mape_criterion, device)
-        print(f"Epoch {epoch+1}/{epochs} - Train Loss: {total_loss / len(train_loader):.4f}")
+
+        print(f"\nEpoch {epoch+1}/{epochs} - Train Loss: {total_loss / len(train_loader):.4f}")
         print("Test results:")
-        print(f"Mean Absolute Error {mae}\nRoot Mean Squared Error {rmse}\nMean Absolute percentage error {mape}%\n")
+        for name, eval_criterion in eval_criteria:
+            score = evaluate_model(model, test_loader, criterion=eval_criterion, device=device)
+            print(f"Criterion: {name}. Score: {score}")
 
     return model
 

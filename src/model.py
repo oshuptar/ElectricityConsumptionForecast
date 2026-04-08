@@ -3,15 +3,15 @@ from torch import nn
 
 class ForecastModel(nn.Module):
     # takes in_features, which is equal to the window size and out_features which is a next prediction value
-    def __init__(self, in_features, out_features = 1):
+    def __init__(self, in_features, hd1 = 64, hd2 = 32, out_features = 1):
         
         super().__init__()
         self.net = nn.Sequential(
-            nn.Linear(in_features=in_features, out_features=32),
+            nn.Linear(in_features=in_features, out_features=hd1),
             nn.ReLU(),
-            nn.Linear(in_features=32, out_features=16),
+            nn.Linear(in_features=hd1, out_features=hd2),
             nn.ReLU(),
-            nn.Linear(in_features=16, out_features=out_features)
+            nn.Linear(in_features=hd2, out_features=out_features)
         )
     
     def forward(self, x):
