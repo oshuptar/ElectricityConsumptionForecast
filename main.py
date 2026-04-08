@@ -7,7 +7,7 @@ from src.utils import (get_device,
 from src.dataset import (get_dataset, get_data_loaders, get_dataframe)
 from src.model import ForecastModel
 from src.train import (train_model, mae_criterion, mape_criterion, rmse_criterion, evaluate_model)
-from src.plotting import (plot_week_15min)
+from src.plotting import (plot_week_15min, plot_year_hourly)
 import torch.nn as nn
 import torch.optim as optim
 
@@ -38,6 +38,7 @@ def main():
         device=device
     )
     plot_week_15min(results_df)
+    plot_year_hourly(results_df)
 
 def greedy_experiment(criterion, device):
     window_size = 10
