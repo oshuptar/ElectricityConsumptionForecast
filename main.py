@@ -1,7 +1,13 @@
-from src.utils import (get_device, get_batch_size, get_hidden_layer1_size, get_hidden_layer2_size, get_learning_rate)
-from src.dataset import (get_dataset, get_data_loaders)
+from src.utils import (get_device,
+                        get_batch_size,
+                        get_hidden_layer1_size,
+                        get_hidden_layer2_size,
+                        get_learning_rate,
+                        build_comparison_dataframe)
+from src.dataset import (get_dataset, get_data_loaders, get_dataframe)
 from src.model import ForecastModel
 from src.train import (train_model, mae_criterion, mape_criterion, rmse_criterion, evaluate_model)
+from src.plotting import (plot_week_15min)
 import torch.nn as nn
 import torch.optim as optim
 
@@ -20,7 +26,18 @@ def main():
                 optimizer=optimizer, device=device, epochs=5)
 
     print("\nQ7: - running the hyperparameter tunning")
-    greedy_experiment(criterion, device)
+    best_result = greedy_experiment(criterion, device)
+
+    print("\nQ8 - plotting predicted vs actual on a test dataset")
+    best_model = best_result["model"]
+    results_df = build_comparison_dataframe(
+        model=best_model,
+        test_loader=test_loader,
+        test_df=get_dataframe('electricity_test.csv'),
+        window_size=window_size,
+        device=device
+    )
+    plot_week_15min(results_df)
 
 def greedy_experiment(criterion, device):
     window_size = 10
@@ -43,6 +60,7 @@ def greedy_experiment(criterion, device):
                         "learning_rate": lr,
                         "batch_size": batch_size,
                         "mae": mae,
+                        "model": trained_model
                     })
     history.sort(key=lambda x: x["mae"])
 
@@ -53,6 +71,8 @@ def greedy_experiment(criterion, device):
     else:
         print("\nBest configuration:")
         print(history[0])
+
+    return history[0]
 
 
     

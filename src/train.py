@@ -10,7 +10,6 @@ def train_model(model : nn.Module, train_loader, test_loader, criterion,
     for epoch in range(epochs):
         model.train()
         total_loss = 0.0
-
         for X, y in train_loader:
             X, y = X.to(device), y.to(device)
             optimizer.zero_grad()
