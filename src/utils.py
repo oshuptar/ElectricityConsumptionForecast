@@ -1,6 +1,7 @@
 import torch
 import numpy as np
 import pandas as pd
+import torch.nn as nn
 
 def get_device() -> torch.device:
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -32,6 +33,28 @@ def build_comparison_dataframe(model, test_loader, test_df, window_size, device)
     })
 
     return results_df
+
+def forecast(model : nn.Module, initial_window, steps: int, device):
+    model.eval()
+    model.to(device)
+    forecast = []
+    current_window = np.array(initial_window, dtype=np.float32).copy()
+    with torch.no_grad():
+        for _ in range(steps):
+            x = torch.from_numpy(current_window.astype(np.float32)).unsqueeze(0).to(device)
+            out = model(x)
+            prediction = out.squeeze().cpu().item()
+            forecast.append(prediction)
+            current_window = np.concatenate([current_window[1:], [prediction]])
+
+    return np.array(forecast, dtype=np.float32)
+
+def build_forecast_dataframe(forecast, start_date = pd.to_datetime("2015-01-01")):
+    timestamps = pd.date_range(start=start_date, periods=len(forecast), freq="15min")
+    return pd.DataFrame({
+        "timestamp": timestamps,
+        "consumption": forecast
+    })
 
 def get_hidden_layer1_size():
     return [64, 128]

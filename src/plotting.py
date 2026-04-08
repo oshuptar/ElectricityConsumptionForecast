@@ -18,10 +18,7 @@ def plot_week_15min(results_df, start = None):
     plt.xticks(rotation=45) # rotates the labels on the x-axis by 45 degrees
     plt.tight_layout()
 
-    project_root = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
-    plots_dir = os.path.join(project_root, "plots")
-    os.makedirs(plots_dir, exist_ok=True)
-    output_path = os.path.join(plots_dir, "week_plot.png")
+    output_path = get_plot_path("week_plot.png")
     plt.savefig(output_path)
     print(f"The plot file was saved to {output_path}")
 
@@ -52,9 +49,26 @@ def plot_year_hourly(results_df):
     plt.xticks(rotation=45)
     plt.tight_layout()
 
+    output_path = get_plot_path("year_plot.png")
+    plt.savefig(output_path)
+    print(f"The plot file was saved to {output_path}")
+
+def plot_year_forecast(results_df: pd.DataFrame):
+    plt.figure(figsize=(14, 5))
+    plt.plot(results_df["timestamp"], results_df["consumption"])
+    plt.title("Forecast for electricity consumption for 2015")
+    plt.xlabel("Timestamp")
+    plt.ylabel("Consumption")
+    plt.xticks(rotation = 45)
+    plt.tight_layout()
+
+    output_path = get_plot_path("forecast_plot.png")
+    plt.savefig(output_path)
+    print(f"The plot file was saved to {output_path}")
+
+def get_plot_path(filename):
     project_root = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
     plots_dir = os.path.join(project_root, "plots")
     os.makedirs(plots_dir, exist_ok=True)
-    output_path = os.path.join(plots_dir, "year_plot.png")
-    plt.savefig(output_path)
-    print(f"The plot file was saved to {output_path}")
+    output_path = os.path.join(plots_dir, filename)
+    return output_path

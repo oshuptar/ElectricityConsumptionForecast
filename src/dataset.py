@@ -12,7 +12,7 @@ def get_dataframe(filename, dataset_dir='../data'):
     df = df.sort_values(by = "timestamp").reset_index(drop = True) # sort changes the row order, but it does not rebuild the index
     return df
 
-def load_dataset(window_size = 5) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+def load_dataset(window_size) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     train_dataframe = get_dataframe('electricity_train.csv')
     test_dataframe = get_dataframe('electricity_test.csv')
     print(f"Column names: {train_dataframe.columns}. Dataframe shape: {train_dataframe.shape}. Data types: {train_dataframe.dtypes}")
